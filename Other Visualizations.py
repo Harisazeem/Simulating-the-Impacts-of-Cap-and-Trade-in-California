@@ -76,3 +76,4 @@ plt.xlabel('Emissions')
 plt.ylabel('Plants')  
 plt.tight_layout()  
 plt.show()  
+
