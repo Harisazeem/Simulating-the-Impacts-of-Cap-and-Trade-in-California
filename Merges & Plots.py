@@ -117,7 +117,7 @@ Tract_Demo_AllTracts = tracts.merge(income_race_demos, on="GEOID", how="outer")
 Tract_Demo_AllTracts.info()
 
 #Last merge for now: Merge Plant_Tract(ungrouped) with tract-level demos. 
-Plant_Tracts_Demo = plants_tracts.merge(income_race_demos, on="GEOID")
+Plant_Tracts_Demo = plants_tracts.merge(income_race_demos, on="GEOID", how="left")
 
 
 
@@ -131,6 +131,8 @@ Tract_Demo_AllTracts.to_file("Tract_Demo_AllTracts.gpkg", layer="TractDemo")
 
 ##For Plants_Tract_Demo Data
 Plant_Tracts_Demo.to_csv("Plant_Tracts_Demo.csv")
+
+
 
 
 
