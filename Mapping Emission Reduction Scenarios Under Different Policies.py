@@ -4,6 +4,7 @@ import folium
 
 # Load census tracts from GeoPackage
 tracts = gpd.read_file("Tract_Demo_AllTracts.gpkg")
+tracts['poc_pop_ratio'] = tracts['poc_pop'] / tracts['tot_pop']
 
 
 ####An Interactive Map for Permit Trading Scenario with bigger polluters having high elasticities####
