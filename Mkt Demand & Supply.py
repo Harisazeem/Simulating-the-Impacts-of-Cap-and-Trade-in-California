@@ -194,9 +194,9 @@ def magnum_opus(PLNT_data, base_price:float, reduction_trgt, guess=20): #reducti
     mkt_price2 =  opt.newton(excess_mkt_d, guess, maxiter=100, args=[Ai, PLNT_data['elast'],emission_allowance])
     ind_prmts_p2 = calculate_ind_q(Ai, mkt_price2, PLNT_data['elast'])
     prct_chng = 100*(ind_prmts_p2['Permits']/PLNT_data['Plant annual CO2 equivalent emissions (tons)']-1)
-    PLNT_data['prmts_post_reduction'] = ind_prmts_p2['Permits']
+    PLNT_data['permits_post_reduction'] = ind_prmts_p2['Permits']
     PLNT_data[f'prct_change_permits with {reduction_trgt*100}% reduction'] = prct_chng
-    return PLNT_data
+    return PLNT_data, mkt_price2
 
 
 #Test this:
@@ -238,3 +238,22 @@ magnum_opus(co2e_permits_low_elast, base_price=32.93, reduction_trgt=0.2)
 #%%
 
 ###Merging and Mapping the Three Scenarios
+
+#Simulation with standard command and control policy (20% reduction):
+Plant_prmt_cmmnd_ctrl = Plant_Tracts_Demo.merge(co2e_permits_cmmnd_ctrl, left_index=True, right_index=True, how='left')
+Plant_prmt_cmmnd_ctrl.drop(columns=["Plant name_y", "Plant annual CO2 equivalent emissions (tons)_y"], inplace=True)
+Plant_prmt_cmmnd_ctrl.rename(columns={"Plant name_x":"Plant name", "Plant annual CO2 equivalent emissions (tons)_x":"Plant annual CO2 equivalent emissions (tons)"}, inplace=True)
+Plant_prmt_cmmnd_ctrl.to_csv("Plant_prmt_cmmnd_ctrl.csv")
+
+#Simulation with permit trading with high elasticity for bigger polluters: high elast means they have low MACs
+Plant_prmt_high_elast =  Plant_Tracts_Demo.merge(co2e_permits_high_elast, left_index=True, right_index=True, how='left')
+Plant_prmt_high_elast.drop(columns=["Plant name_y", "Plant annual CO2 equivalent emissions (tons)_y"], inplace=True)
+Plant_prmt_high_elast.rename(columns={"Plant name_x":"Plant name", "Plant annual CO2 equivalent emissions (tons)_x":"Plant annual CO2 equivalent emissions (tons)"}, inplace=True)
+Plant_prmt_high_elast.to_csv("Plant_prmt_high_elast.csv")
+
+#Simulation with permit trading with low elasticity for bigger polluters (top 41 with emissions > 250k tons)
+Plant_prmt_low_elast =  Plant_Tracts_Demo.merge(co2e_permits_low_elast, left_index=True, right_index=True, how='left')
+Plant_prmt_low_elast.drop(columns=["Plant name_y", "Plant annual CO2 equivalent emissions (tons)_y"], inplace=True)
+Plant_prmt_low_elast.rename(columns={"Plant name_x":"Plant name", "Plant annual CO2 equivalent emissions (tons)_x":"Plant annual CO2 equivalent emissions (tons)"}, inplace=True)
+Plant_prmt_low_elast.to_csv("Plant_prmt_low_elast.csv")
+

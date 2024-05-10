@@ -27,12 +27,11 @@ tracts.set_index("GEOID")
 
 #Merges and Joins
 
-#1. Join tracts with plants df. This will give plants and by tract. It will leave tracts without plants
+#1. Join tracts with plants df. This will give plants by tract. It will leave tracts without plants
 #but we will deal with that later.
 plants_tracts = plants_ca.sjoin(tracts, how="left", predicate="within") #left is within right
 print(plants_tracts["geometry"].value_counts(dropna=False))
-plants_tracts.set_index("GEOID") #We got a layer with plants within tracts.
-#Were the geometries of plants and tracts same in the first place?? No, but they were overlapping. 
+plants_tracts.set_index("GEOID") #We got a layer with plants within tracts. 
 #We're left with left geometries only though. But now we have data for the tracts as well. 
 
 
@@ -122,11 +121,11 @@ Plant_Tracts_Demo = plants_tracts.merge(income_race_demos, on="GEOID", how="left
 
 
 #Create Layers and GeoPackageFiles
-##For Tract_PLNT_Demo_All file
+##For Tract_PLNT_Demo_All file. Contains information on only those tracts with plants on them. 
 Tract_Plant_Demo_All = Tract_Plant_Demo_All.drop(columns=["GEOIDFQ", "Plant county name", "Unused Capacity", "state",])
 Tract_Plant_Demo_All.to_file("Tract_Plant_Demo_All.gpkg", layer="TractPLNTDemo")
 
-##For Tract_Demo_AllTract
+##For Tract_Demo_AllTract. Information on all tracts and their demographic information
 Tract_Demo_AllTracts.to_file("Tract_Demo_AllTracts.gpkg", layer="TractDemo")
 
 ##For Plants_Tract_Demo Data
